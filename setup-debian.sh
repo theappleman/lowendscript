@@ -126,6 +126,8 @@ function install_mysql {
 key_buffer = 8M
 query_cache_size = 0
 innodb = OFF
+default_storage_engine = MyISAM
+max_connections = 40
 END
     invoke-rc.d mysql start
 
