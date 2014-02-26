@@ -120,10 +120,12 @@ function install_mysql {
     # Install a low-end copy of the my.cnf to disable InnoDB, and then delete
     # all the related files.
     invoke-rc.d mysql stop
+    rm -f /var/lib/mysql/ib*
     cat > /etc/mysql/conf.d/lowendbox.cnf <<END
 [mysqld]
 key_buffer = 8M
 query_cache_size = 0
+innodb = OFF
 END
     invoke-rc.d mysql start
 
