@@ -163,8 +163,6 @@ location ~ \.php$ {
     }
 }
 END
-    update-rc.d php-cgi defaults
-    invoke-rc.d php-cgi start
 }
 
 function install_syslogd {
