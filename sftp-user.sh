@@ -15,5 +15,4 @@ chown $USER:www-data $ROOT/$USER/{htdocs,private}
 PASSWORD=$(pwgen -s 31)
 
 echo "$USER:$PASSWORD" | chpasswd
-
-
+echo "$USER:$PASSWORD"
