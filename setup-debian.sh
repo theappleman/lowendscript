@@ -154,7 +154,7 @@ END
 }
 
 function install_php {
-    check_install php5-fpm php5-cli php5-mysql
+    check_install php5-fpm php5-fpm php5-mysql
 
     cat > /etc/nginx/fastcgi_php <<END
 location ~ \.php$ {
