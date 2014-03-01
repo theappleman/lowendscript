@@ -21,17 +21,42 @@ echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED 
 
 cat > "/etc/nginx/sites-enabled/$USER.conf" <<END
 server {
-    server_name $1;
-    root /var/www/$1;
-    include /etc/nginx/php5-fpm;
-    location / {
-        index index.php;
-        if (!-e \$request_filename) {
-            rewrite ^(.*)$  /index.php last;
+        listen 0.0.0.0:80;
+        listen [::]:80;
+
+        server_name $USER;
+        root /var/www/$USER/htdocs;
+
+        include /etc/nginx/php5-fpm;
+        location / {
+                index index.php;
+                if (!-e \$request_filename) {
+                        rewrite ^(.*)$  /index.php last;
+                }
         }
-    }
 }
+
+#server {
+#       listen 0.0.0.0:443 ssl;
+#       listen [::]:443 ssl;
+#
+#       server_name $USER;
+#       root /var/www/$USER/htdocs;
+#
+#       ssl_certificate /etc/nginx/ssl/$(date +%Y)-$USER.crt;
+#       ssl_certificate_key /etc/nginx/ssl/$(date +%Y)-$USER.key;
+#
+#       include /etc/nginx/php5-fpm;
+#       location / {
+#               index index.php;
+#               if (!-e \$request_filename) {
+#                       rewrite ^(.*)$  /index.php last;
+#               }
+#       }
+#}
 END
 
 echo "$USER:$PASSWORD" | chpasswd
-echo "$USER@$(hostname):$PASSWORD:$userid:$DBPW:$dbname"
+
+# username : pampassword : mysql username : mysql password : mysql database
+echo "$USER@$(hostname):$PASSWORD:$userid:$DBPW:$dbname" | tee -a .sftpuserinfo
