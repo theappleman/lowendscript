@@ -2,30 +2,28 @@
 
 set -e
 
-USER=${1?Need user}
+SITE=${1?Need user}
+USER=$(awk -F. '{print$1}' <<<$SITE)
 ROOT=${2:-/var/www/vhosts}
 PASSWORD=$(pwgen -s 31)
 DBPW=$(pwgen -s 31)
 
 mkdir -p $ROOT/$USER
-useradd -d $ROOT/$USER -g www-data -G sftponly $USER
+useradd -d $ROOT/$USER -g www-data -G sftponly-s /bin/false $USER
 mkdir -p $ROOT/$USER/{htdocs,private}
 chown $USER:www-data $ROOT/$USER/{htdocs,private}
 
-dbname=$(tr . _ <<<${USER})
+dbname=$(echo $USER | tr . _)
 userid=${USER:0:15}
 
 mysqladmin create "$dbname"
 echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED BY '$DBPW';" | \
         mysql
 
-cat > "/etc/nginx/sites-enabled/$USER.conf" <<END
+cat > "/etc/nginx/sites-available/$USER" <<END
 server {
-        listen 0.0.0.0:80;
-        listen [::]:80;
-
-        server_name $USER;
-        root /var/www/$USER/htdocs;
+        server_name $SITE;
+        root /var/www/vhosts/$USER/htdocs;
 
         include /etc/nginx/php5-fpm;
         location / {
@@ -37,14 +35,14 @@ server {
 }
 
 #server {
-#       listen 0.0.0.0:443 ssl;
+#       listen 443 ssl;
 #       listen [::]:443 ssl;
 #
-#       server_name $USER;
-#       root /var/www/$USER/htdocs;
+#       server_name $SITE;
+#       root /var/www/vhosts/$USER/htdocs;
 #
-#       ssl_certificate /etc/nginx/ssl/$(date +%Y)-$USER.crt;
-#       ssl_certificate_key /etc/nginx/ssl/$(date +%Y)-$USER.key;
+#       ssl_certificate /etc/ssl/crt/$(date +%Y)-$SITE.crt;
+#       ssl_certificate_key /etc/ssl/private/$(date +%Y)-$SITE.key;
 #
 #       include /etc/nginx/php5-fpm;
 #       location / {
