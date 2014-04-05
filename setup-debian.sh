@@ -123,11 +123,12 @@ function install_mysql {
     rm -f /var/lib/mysql/ib*
     cat > /etc/mysql/conf.d/lowendbox.cnf <<END
 [mysqld]
-key_buffer = 8M
+key_buffer = 256K
 query_cache_size = 0
-innodb = OFF
 default_storage_engine = MyISAM
-max_connections = 40
+max_connections = 20
+max_user_connections = 10
+innodb_buffer_pool_size=5M
 END
     invoke-rc.d mysql start
 
