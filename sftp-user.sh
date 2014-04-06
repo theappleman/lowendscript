@@ -9,7 +9,7 @@ PASSWORD=$(pwgen -s 31)
 DBPW=$(pwgen -s 31)
 
 mkdir -p $ROOT/$USER
-useradd -d $ROOT/$USER -g www-data -G sftponly-s /bin/false $USER
+useradd -d $ROOT/$USER -g www-data -G sftponly -s /bin/false $USER
 mkdir -p $ROOT/$USER/{htdocs,private}
 chown $USER:www-data $ROOT/$USER/{htdocs,private}
 
@@ -27,6 +27,17 @@ server {
 
         include /etc/nginx/php5-fpm;
         index index.php;
+
+        location ~ \.php$ {
+                include /etc/nginx/fastcgi_params;
+
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+                if (-f \$request_filename) {
+                        fastcgi_pass unix:/var/run/php5-fpm.$USER.sock;
+                }
+        }
+
         location / {
                 try_files \$uri \$uri/ /index.php;
         }
@@ -39,11 +50,23 @@ server {
 #       server_name $SITE;
 #       root /var/www/vhosts/$USER/htdocs;
 #
+#       add_header Strict-Transport-Security “max-age=31536000; includeSubdomains”;
+#
 #       ssl_certificate /etc/ssl/crt/$(date +%Y)-$SITE.crt;
 #       ssl_certificate_key /etc/ssl/private/$(date +%Y)-$SITE.key;
 #
 #       include /etc/nginx/php5-fpm;
 #       index index.php;
+#
+#       location ~ \.php$ {
+#               include /etc/nginx/fastcgi_params;
+#
+#               fastcgi_index index.php;
+#               fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+#               if (-f \$request_filename) {
+#`                       fastcgi_pass unix:/var/run/php5-fpm.$USER.sock;
+#               }
+#       }
 #       location / {
 #               try_files \$uri \$uri/ /index.php;
 #       }
@@ -67,3 +90,8 @@ echo "$USER:$PASSWORD" | chpasswd
 
 # username : pampassword : mysql username : mysql password : mysql database
 echo "$USER@$(hostname):$PASSWORD:$userid:$DBPW:$dbname" | tee -a .sftpuserinfo
+
+service php5-fpm reload
+
+ln -s ../sites-available/$USER /etc/nginx/sites-enabled
+nginx -tq && service nginx reload
