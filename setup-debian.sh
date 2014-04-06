@@ -75,43 +75,6 @@ function install_dash {
     ln -s dash /bin/sh
 }
 
-function install_dropbear {
-    check_install dropbear dropbear
-    check_install /usr/sbin/xinetd xinetd
-
-    # Disable SSH
-    touch /etc/ssh/sshd_not_to_be_run
-    invoke-rc.d ssh stop
-
-    # Enable dropbear to start. We are going to use xinetd as it is just
-    # easier to configure and might be used for other things.
-    cat > /etc/xinetd.d/dropbear <<END
-service ssh
-{
-    socket_type     = stream
-    only_from       = 0.0.0.0
-    wait            = no
-    user            = root
-    protocol        = tcp
-    server          = /usr/sbin/dropbear
-    server_args     = -i
-    disable         = no
-}
-END
-    invoke-rc.d xinetd restart
-}
-
-function install_exim4 {
-    check_install mail exim4
-    if [ -f /etc/exim4/update-exim4.conf.conf ]
-    then
-        sed -i \
-            "s/dc_eximconfig_configtype='local'/dc_eximconfig_configtype='internet'/" \
-            /etc/exim4/update-exim4.conf.conf
-        invoke-rc.d exim4 restart
-    fi
-}
-
 function install_mysql {
     # Install the MySQL packages
     check_install mysqld mysql-server
@@ -307,9 +270,6 @@ export PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
 check_sanity
 case "$1" in
-exim4)
-    install_exim4
-    ;;
 mysql)
     install_mysql
     ;;
@@ -325,16 +285,13 @@ system)
     install_dash
     install_syslogd
     ;;
-dropbear)
-    install_dropbear
-    ;;
 wordpress)
     install_wordpress $2
     ;;
 *)
     echo 'Usage:' `basename $0` '[option]'
     echo 'Available option:'
-    for option in system dropbear exim4 mysql nginx php wordpress
+    for option in system mysql nginx php wordpress
     do
         echo '  -' $option
     done
