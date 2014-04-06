@@ -18,58 +18,58 @@ userid=${USER:0:15}
 
 mysqladmin create "$dbname"
 echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED BY '$DBPW';" | \
-        mysql
+	mysql
 
 cat > "/etc/nginx/sites-available/$USER" <<END
 server {
-        server_name $SITE;
-        root /var/www/vhosts/$USER/htdocs;
+	server_name $SITE;
+	root /var/www/vhosts/$USER/htdocs;
 
-        include /etc/nginx/php5-fpm;
-        index index.php;
+	include /etc/nginx/php5-fpm;
+	index index.php;
 
-        location ~ \.php$ {
-                include /etc/nginx/fastcgi_params;
+	location ~ \.php$ {
+		include /etc/nginx/fastcgi_params;
 
-                fastcgi_index index.php;
-                fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-                if (-f \$request_filename) {
-                        fastcgi_pass unix:/var/run/php5-fpm.$USER.sock;
-                }
-        }
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+		if (-f \$request_filename) {
+			fastcgi_pass unix:/var/run/php5-fpm.$USER.sock;
+		}
+	}
 
-        location / {
-                try_files \$uri \$uri/ /index.php;
-        }
+	location / {
+		try_files \$uri \$uri/ /index.php;
+	}
 }
 
 #server {
-#       listen 443 ssl;
-#       listen [::]:443 ssl;
+#	listen 443 ssl;
+#	listen [::]:443 ssl;
 #
-#       server_name $SITE;
-#       root /var/www/vhosts/$USER/htdocs;
+#	server_name $SITE;
+#	root /var/www/vhosts/$USER/htdocs;
 #
-#       add_header Strict-Transport-Security “max-age=31536000; includeSubdomains”;
+#	add_header Strict-Transport-Security “max-age=31536000; includeSubdomains”;
 #
-#       ssl_certificate /etc/ssl/crt/$(date +%Y)-$SITE.crt;
-#       ssl_certificate_key /etc/ssl/private/$(date +%Y)-$SITE.key;
+#	ssl_certificate /etc/ssl/crt/$(date +%Y)-$SITE.crt;
+#	ssl_certificate_key /etc/ssl/private/$(date +%Y)-$SITE.key;
 #
-#       include /etc/nginx/php5-fpm;
-#       index index.php;
+#	include /etc/nginx/php5-fpm;
+#	index index.php;
 #
-#       location ~ \.php$ {
-#               include /etc/nginx/fastcgi_params;
+#	location ~ \.php$ {
+#		include /etc/nginx/fastcgi_params;
 #
-#               fastcgi_index index.php;
-#               fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-#               if (-f \$request_filename) {
-#`                       fastcgi_pass unix:/var/run/php5-fpm.$USER.sock;
-#               }
-#       }
-#       location / {
-#               try_files \$uri \$uri/ /index.php;
-#       }
+#		fastcgi_index index.php;
+#		fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+#		if (-f \$request_filename) {
+#`			fastcgi_pass unix:/var/run/php5-fpm.$USER.sock;
+#		}
+#	}
+#	location / {
+#		try_files \$uri \$uri/ /index.php;
+#	}
 #}
 END
 
