@@ -344,10 +344,10 @@ function create_sftp {
 	SITE=$1
 	USER=$(cut -d. -f1 <<<$SITE)
 	PASSWORD=$(get_password sftp:$USER)
-	mkdir -p /var/www/vhosts/$SITE/{conf,htdocs,private}
+	mkdir -p /var/www/vhosts/$SITE/{.ssh,conf,htdocs,private}
 	useradd -d /var/www/vhosts/$SITE \
 		-g www-data -G sftponly -s /bin/false $USER
-	chown $USER:www-data /var/www/vhosts/$SITE/{conf,htdocs,private}
+	chown $USER:www-data /var/www/vhosts/$SITE/{.ssh,conf,htdocs,private}
 	echo "$USER:$PASSWORD" | chpasswd
 	print_info "sftp:$USER:$PASSWORD"
 }
