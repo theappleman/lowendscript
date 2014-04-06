@@ -86,7 +86,7 @@ function install_mysql {
     rm -f /var/lib/mysql/ib*
     cat > /etc/mysql/conf.d/lowendbox.cnf <<END
 [mysqld]
-key_buffer = 256K
+key_buffer_size = 256K
 query_cache_size = 0
 default_storage_engine = MyISAM
 max_connections = 20
