@@ -26,11 +26,9 @@ server {
         root /var/www/vhosts/$USER/htdocs;
 
         include /etc/nginx/php5-fpm;
+        index index.php;
         location / {
-                index index.php;
-                if (!-e \$request_filename) {
-                        rewrite ^(.*)$  /index.php last;
-                }
+                try_files \$uri \$uri/ /index.php;
         }
 }
 
@@ -45,13 +43,24 @@ server {
 #       ssl_certificate_key /etc/ssl/private/$(date +%Y)-$SITE.key;
 #
 #       include /etc/nginx/php5-fpm;
+#       index index.php;
 #       location / {
-#               index index.php;
-#               if (!-e \$request_filename) {
-#                       rewrite ^(.*)$  /index.php last;
-#               }
+#               try_files \$uri \$uri/ /index.php;
 #       }
 #}
+END
+
+cat > "/etc/php5/fpm/pool.d/$USER.conf" <<END
+[$USER]
+user = $USER
+group = www-data
+listen = /var/run/php5-fpm.$USER.sock
+pm = dynamic
+pm.max_children = 5
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 3
+chdir = /
 END
 
 echo "$USER:$PASSWORD" | chpasswd
