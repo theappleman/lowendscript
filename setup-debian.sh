@@ -584,7 +584,7 @@ function make_admin {
 function show_help {
 	echo 'Usage:' `basename $0` '[option]'
 	echo 'Available options:'
-	for option in all alt system dovecot interactive ip mail mysql nginx php polipo redis user admin vhost wordpress (npm) (opensmtpd)
+	for option in all alt system dovecot interactive ip mail mysql nginx php polipo redis user admin vhost wordpress '(npm)' '(opensmtpd)'
 	do
 		echo '  -' $option
 	done
