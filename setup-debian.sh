@@ -133,6 +133,17 @@ location ~ \.php$ {
 END
 }
 
+function install_polipo {
+    check_install polipo polipo
+    cat > /etc/polipo/config <<END
+chunkHighMark = 819200
+objectHighMark = 128
+censoredHeaders = set-cookie, cookie, cookie2, from, accept-language
+censorReferer = true
+END
+    service polipo restart
+}
+
 function install_syslogd {
     # We just need a simple vanilla syslogd. Also there is no need to log to
     # so many files (waste of fd). Just dump them into
@@ -279,6 +290,9 @@ nginx)
 php)
     install_php
     ;;
+polipo)
+    install_polipo
+    ;;
 system)
     remove_unneeded
     update_upgrade
@@ -291,7 +305,7 @@ wordpress)
 *)
     echo 'Usage:' `basename $0` '[option]'
     echo 'Available option:'
-    for option in system mysql nginx php wordpress
+    for option in system mysql nginx php polipo wordpress
     do
         echo '  -' $option
     done
