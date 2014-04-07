@@ -75,19 +75,6 @@ function die {
 	exit 1
 }
 
-function get_domain_name() {
-	# Getting rid of the lowest part.
-	domain=${1%.*}
-	lowest=`expr "$domain" : '.*\.\([a-z][a-z]*\)'`
-	case "$lowest" in
-	com|net|org|gov|edu|co)
-		domain=${domain%.*}
-		;;
-	esac
-	lowest=`expr "$domain" : '.*\.\([a-z][a-z]*\)'`
-	[ -z "$lowest" ] && echo "$domain" || echo "$lowest"
-}
-
 function get_password {
 	check_install pwgen pwgen 2>&1 >/dev/null
 	KEY=$1
