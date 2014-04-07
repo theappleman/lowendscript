@@ -136,7 +136,7 @@ function install_munin {
 		cat >/etc/munin/plugin-conf.d/mysql <<EOF
 [mysql*]
 env.mysqladmin /usr/bin/mysqladmin --socket=/var/run/mysqld/mysqld.sock
-env.mysqlopts --socket=/var/run/mysqld/mysqld.sock -umunin-p$muninpass
+env.mysqlopts --socket=/var/run/mysqld/mysqld.sock -umunin -p$muninpass
 env.mysqluser munin
 env.mysqlpassword $muninpass
 EOF
