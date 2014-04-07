@@ -600,6 +600,7 @@ while test "$#" -gt 0; do
 		check_install go golang
 		check_install mojo libmojolicious-perl
 		check_install perlbrew perlbrew liblocal-lib-perl
+		check_install virtualenv python-virtualenv
 		;;
 	dovecot)
 		install_dovecot
