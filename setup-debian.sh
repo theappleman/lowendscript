@@ -7,8 +7,8 @@ function add_6addr {
 	ADDR=$1
 
 	if ! (/sbin/ip -6 a | grep -q $ADDR); then
-		ip -6 addr add $ADDR/$CIDR dev eth0
-		tee -a /etc/network/interfaces <<<"     up ip -6 addr add $ADDR/$CIDR dev eth0"
+		ip -6 addr add $ADDR dev eth0
+		tee -a /etc/network/interfaces <<<"     up ip -6 addr add $ADDR dev eth0"
 	fi
 }
 
