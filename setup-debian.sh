@@ -602,6 +602,8 @@ while test "$#" -gt 0; do
 		check_install mojo libmojolicious-perl
 		check_install perlbrew perlbrew liblocal-lib-perl
 		check_install virtualenv python-virtualenv
+		check_install rbenv rbenv
+		check_install ruby-build ruby-build
 		;;
 	dovecot)
 		install_dovecot
