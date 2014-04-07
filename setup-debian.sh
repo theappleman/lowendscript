@@ -343,7 +343,8 @@ function create_shell {
 	SITE=$1
 	USER=$(cut -d. -f1 <<<$SITE)
 	PASSWORD=$(get_password shell:$USER)
-	useradd -m -d /var/www/vhosts/$SITE \
+	ROOT=(test -d /var/www/vhosts && echo /var/www/vhosts || echo /home)
+	useradd -m -d $ROOT/$SITE \
 		-G users -s /bin/bash $USER
 	echo "$USER:$PASSWORD" | chpasswd
 	print_info "shell:$USER:$PASSWORD"
