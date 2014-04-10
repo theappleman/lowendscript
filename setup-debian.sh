@@ -287,6 +287,7 @@ function install_redis {
 }
 
 function config_sshd {
+	check_install sshd openssl-server
 	grep -q sftponly /etc/group || groupadd sftponly
 
 	cat > /etc/ssh/sshd_config <<EOF
