@@ -66,6 +66,12 @@ function check_sanity {
 	then
 		die "Distribution is not supported"
 	fi
+	
+	if [ -x /usr/sbin/policy-rc.d ]
+	then
+		print_warn "removing policy-rc.d"
+		rm -f /usr/sbin/policy-rc.d
+	fi
 
 	test -x "$0" || chmod +x "$0"
 }
