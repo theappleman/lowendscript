@@ -408,9 +408,9 @@ server {
 #	listen [::]:443 ssl;
 #
 #	server_name $SITE;
-#	root /var/www/vhosts/$USER/htdocs;
+#	root /var/www/vhosts/$SITE/htdocs;
 #
-#	add_header Strict-Transport-Security “max-age=31536000; includeSubdomains”;
+#	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 #
 #	ssl_certificate /etc/ssl/crt/$(date +%Y)-$SITE.crt;
 #	ssl_certificate_key /etc/ssl/private/$(date +%Y)-$SITE.key;
@@ -626,7 +626,7 @@ while test "$#" -gt 0; do
 		;;
 	ip)
 		[ -z "$2" ] && die "Usage: `basename $0` $1 <address/cidr>"
-		add_6addr
+		add_6addr "$2"
 		shift
 		;;
 	munin)
