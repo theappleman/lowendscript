@@ -610,13 +610,12 @@ while test "$#" -gt 0; do
 		/bin/bash "$0" system int dovecot nginx munin php polipo
 		;;
 	alt)
-		check_install nodejs nodejs
 		check_install go golang
-		check_install mojo libmojolicious-perl
 		check_install perlbrew perlbrew liblocal-lib-perl
 		check_install virtualenv python-virtualenv
 		check_install rbenv rbenv
 		check_install ruby-build ruby-build
+		check_install nodejs nodejs
 		;;
 	dovecot)
 		install_dovecot
