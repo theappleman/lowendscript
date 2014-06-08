@@ -279,13 +279,13 @@ function install_wordpress {
 }
 
 function install_interactive {
+	check_install nmap nmap
 	check_install htop htop
 	check_install strace strace
 	check_install vim vim
 	check_install git git
 	check_install ncdu ncdu
-
-	check_install nmap nmap
+	check_install tmux tmux
 	check_install tcpdump tcpdump
 	check_install telnet telnet
 	check_install curl curl
