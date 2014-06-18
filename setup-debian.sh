@@ -461,7 +461,7 @@ server {
 #
 #	server_name $SITE;
 #
-#	add_header Strict-Transport-Security “max-age=31536000; includeSubdomains”;
+#	add_header Strict-Transport-Security "max-age=31536000";
 #
 #	ssl_certificate /etc/ssl/crt/$(date +%Y)-$SITE.crt;
 #	ssl_certificate_key /etc/ssl/private/$(date +%Y)-$SITE.key;
